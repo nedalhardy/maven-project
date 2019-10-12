@@ -5,20 +5,17 @@ pipeline {
         jdk 'localJDK'
     }
     stages {
-        stage ('build'){
-            steps {
-                 bat 'mvn clean install'
-            }
-        }
-        stage('Sonarqube') {
-            environment {
-                scannerHome = tool 'localSonar'
-            }
+        stage("build & SonarQube analysis") {
+            agent any
             steps {
                 withSonarQubeEnv('sonarQube') {
-                    bat "${scannerHome}\\bin\\sonar-scanner"
+                    sh 'mvn clean package sonar:sonar'
                 }
-                timeout(time: 10, unit: 'MINUTES') {
+            }
+        }
+        stage("Quality Gate") {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
                     waitForQualityGate abortPipeline: true
                 }
             }

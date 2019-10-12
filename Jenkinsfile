@@ -1,21 +1,12 @@
 pipeline {
     agent any
+    tools {
+        maven 'localMaven'
+    }
     stages {
-        stage ('init'){
+        stage ('build'){
             steps {
-                echo "Testing ..."
-            }
-        }
-
-        stage('build'){
-            steps {
-                echo 'Building ...'
-            }
-        }
-
-        stage('Deploy'){
-            steps {
-                echo 'Code deployed.'
+                 sh 'mvn clean install'
             }
         }
     }

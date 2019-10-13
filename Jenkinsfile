@@ -48,7 +48,7 @@ pipeline {
 
         stage('deployment'){
             steps {
-                deploy: 'tomcat8'
+                deploy 'tomcat8'
             }
         }
 

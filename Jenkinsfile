@@ -51,7 +51,7 @@ pipeline {
                 deploy(adapters:[
                         tomcat8(
                         url: 'http://localhost:8090',
-                        credentialsId: 'tomcat',
+                        credentialsId: '69b40497-25e4-4812-ba18-6f5e7e941ed1',
                         )],
                         war: '*/target/*.war',
                         contextPath: '/app')

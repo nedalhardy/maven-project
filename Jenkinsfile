@@ -34,7 +34,7 @@ pipeline {
             }
 
         }
-        stage("package"){
+        stage("package") {
             steps {
                 bat 'mvn clean package'
             }
@@ -46,9 +46,14 @@ pipeline {
             }
         }
 
-        stage('deployment'){
+        stage('deployment') {
             steps {
-                deploy 'tomcat8'
+                def tc8 = tomcat8(
+                        url: 'http://localhost:8090',
+                        password: 'tomcat',
+                        userName: 'tomcat'
+                )
+                deploy(container: tc8, war: '*/target/*.war', contextPath: '/app')
             }
         }
 

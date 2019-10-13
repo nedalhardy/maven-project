@@ -4,23 +4,53 @@ pipeline {
         maven 'localMaven'
         jdk 'localJDK'
     }
+
+    triggers {
+        pollSCM('* * * * *') // Polling Source Control
+    }
+
     stages {
-        stage("build & SonarQube analysis") {
-            agent any
+        stage("build") {
+            steps {
+                bat 'mvn clean verify'
+            }
+        }
+        stage("sonar") {
             steps {
                 withSonarQubeEnv('sonarQube') {
-                    bat 'mvn clean package sonar:sonar'
+                    bat 'mvn sonar:sonar'
+                }
+                timeout(time: 1, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
+            post {
+                success {
+                    echo 'SONAR PASSED'
+                }
+                failure {
+                    echo 'SONAR FAILED'
+                }
+            }
+
         }
-        stage("Quality Gate") {
+        stage("package"){
             steps {
-                retry(2) {
-                    timeout(time: 1, unit: 'MINUTES') {
-                        waitForQualityGate abortPipeline: true
-                    }
+                bat 'mvn clean package'
+            }
+            post {
+                success {
+                    echo 'Now Archiving...'
+                    archiveArtifacts artifacts: '**/target/*.war'
                 }
             }
         }
+
+        stage('deployment'){
+            steps {
+                bat "winscp -i **/target/*.war D:\\apache-tomcat-8.5.46\\webapps"
+            }
+        }
+
     }
 }

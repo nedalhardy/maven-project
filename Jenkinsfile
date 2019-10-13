@@ -48,11 +48,14 @@ pipeline {
 
         stage('deployment') {
             steps {
-                deploy(adapters: tomcat8(
+                deploy(adapters:[
+                        tomcat8(
                         url: 'http://localhost:8090',
                         password: 'tomcat',
                         userName: 'tomcat'
-                ), war: '*/target/*.war', contextPath: '/app')
+                        )],
+                        war: '*/target/*.war',
+                        contextPath: '/app')
             }
         }
 

@@ -48,12 +48,11 @@ pipeline {
 
         stage('deployment') {
             steps {
-                def tc8 = tomcat8(
+                deploy(container: tomcat8(
                         url: 'http://localhost:8090',
                         password: 'tomcat',
                         userName: 'tomcat'
-                )
-                deploy(container: tc8, war: '*/target/*.war', contextPath: '/app')
+                ), war: '*/target/*.war', contextPath: '/app')
             }
         }
 

@@ -48,7 +48,7 @@ pipeline {
 
         stage('deployment') {
             steps {
-                deploy(adapter: tomcat8(
+                deploy(adapters: tomcat8(
                         url: 'http://localhost:8090',
                         password: 'tomcat',
                         userName: 'tomcat'

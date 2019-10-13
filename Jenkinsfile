@@ -48,7 +48,7 @@ pipeline {
 
         stage('deployment'){
             steps {
-                bat 'xcopy "**/target/*.war" "D:/apache-tomcat-8.5.46/webapps" /E'
+                deploy: 'tomcat8'
             }
         }
 
